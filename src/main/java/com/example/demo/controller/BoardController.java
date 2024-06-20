@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -29,15 +31,22 @@ public class BoardController {
 		System.out.println("현재 페이지 번호: " + (list.getNumber() + 1));
 		System.out.println("페이지에 표시할 게시물 수: " + list.getNumberOfElements());
 	}
-
+	
+	// 등록 폼 반환하는 메소드
 	@GetMapping("/register")
 	public void register() {
 	}
 
+	// 등록 처리 메소드
 	@PostMapping("/register")
-	public String registerPost(BoardDTO dto, RedirectAttributes redirectAttributes) {
+	public String registerPost(BoardDTO dto, RedirectAttributes redirectAttributes, Principal principal) {
+		
+		// 인증 객체(principal)에서 아이디를 꺼내서, 게시물을 작성자로 입력
+		String id = principal.getName();
+		dto.setWriter(id);
 		int no = service.register(dto);
 		redirectAttributes.addFlashAttribute("msg", no);
+		
 		return "redirect:/board/list";
 	}
 

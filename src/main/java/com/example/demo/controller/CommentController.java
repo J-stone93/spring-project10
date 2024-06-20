@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,10 @@ public class CommentController {
 	}
 	
 	@PostMapping("/register")
-	public Boolean register(CommentDTO dto) {
-		String id = "user1"; 
+	public Boolean register(CommentDTO dto, Principal principal) {
+		
+		// 인증객체(Principal)에서 아이디를 꺼내서, 작성자로 입력
+		String id = principal.getName(); 
 		dto.setWriter(id);
 		service.register(dto);
 		return true;
